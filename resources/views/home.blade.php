@@ -38,8 +38,33 @@
         @endif
 
         <h1 class="text-gray-600 dark:text-gray-400 h1 text-2xl mt-6">Latest Polls:</h1>
-        @for ($i = 0; $i < 10; $i++)
+        {{$polls}}
+        @foreach($polls as $poll)
         <div class="max-w-sm rounded overflow-hidden shadow-lg bg-slate-300 drop-shadow-md hover:drop-shadow-xl my-5">
+            <div class="px-6 py-4">
+                <div class="font-bold text-xl mb-2 dark:text-slate-700">{{$poll->poll_question}}</div>
+                <div class="mt-1">
+                    <label class="inline-flex items-center">
+                        <input type="checkbox" class="form-checkbox h-8 w-8">
+                        <span class="ml-4 text-xl">Option 3</span>
+                    </label>
+                </div>
+                <div class="form-check">
+                    <input class="form-check-input appearance-none rounded-full border border-gray-300 bg-white checked:bg-blue-600 checked:border-blue-600 focus:outline-none transition duration-200 mt-1 align-top bg-no-repeat bg-center bg-contain float-left mr-2 cursor-pointer h-6 w-6" type="radio" name="flexRadioDefault" id="flexRadioDefault1">
+                    <label class="form-check-label inline-block text-gray-800 mt-1" for="flexRadioDefault1">
+                        Default radio
+                    </label>
+                </div>
+            </div>
+
+            <div class="px-6 pt-4 pb-2">
+                <span class="inline-block bg-gray-200 rounded-full px-3 py-1 text-sm font-semibold text-gray-700 mr-2 mb-2">{{$poll->user_id}}</span>
+                <span class="inline-block bg-gray-200 rounded-full px-3 py-1 text-sm font-semibold text-gray-700 mr-2 mb-2">#travel</span>
+                <span class="inline-block bg-gray-200 rounded-full px-3 py-1 text-sm font-semibold text-gray-700 mr-2 mb-2">#winter</span>
+            </div>
+        </div>
+        @endforeach
+        @for ($i = 0; $i < 10; $i++) <div class="max-w-sm rounded overflow-hidden shadow-lg bg-slate-300 drop-shadow-md hover:drop-shadow-xl my-5">
             <div class="px-6 py-4">
                 <div class="font-bold text-xl mb-2 dark:text-slate-700">Poll {{$i + 1}}</div>
                 <p class="text-gray-700 text-base">
@@ -52,8 +77,8 @@
                 <span class="inline-block bg-gray-200 rounded-full px-3 py-1 text-sm font-semibold text-gray-700 mr-2 mb-2">#travel</span>
                 <span class="inline-block bg-gray-200 rounded-full px-3 py-1 text-sm font-semibold text-gray-700 mr-2 mb-2">#winter</span>
             </div>
-        </div>
-        @endfor
+    </div>
+    @endfor
     </div>
 </body>
 
