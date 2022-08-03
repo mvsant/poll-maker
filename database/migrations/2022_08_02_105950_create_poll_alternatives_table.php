@@ -13,14 +13,13 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('polls', function (Blueprint $table) {
+        Schema::create('poll_alternatives', function (Blueprint $table) {
             $table->id();
 
-            $table->string('poll_question', 255);
-            $table->datetime('start_date');
-            $table->datetime('end_date');
-            
-            $table->foreignId('user_id')->constrained('users')->onDelete('cascade');
+            $table->string('alternative', 255);
+            $table->integer('votes');
+
+            $table->foreignId('poll_id')->constrained('polls')->onDelete('cascade');
 
             $table->timestamps();
         });
@@ -33,6 +32,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('polls');
+        Schema::dropIfExists('poll_alternatives');
     }
 };
