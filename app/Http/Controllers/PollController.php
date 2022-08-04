@@ -11,14 +11,15 @@ class PollController extends Controller
 {
     public function index()
     {
+        $poll = new Poll;
         $user = auth()->user();
-        $polls = Poll::where('user_id', $user->id)->get();
+        $polls = $poll::where('user_id', $user->id)->get();
         return view('polls.index')->with('polls', $polls);
     }
 
     public function create()
     {
-        return view('polls.new');
+        return view('polls.create');
     }
 
     public function store(Request $request)
@@ -45,29 +46,19 @@ class PollController extends Controller
                 'poll_id' => $current_poll->id
             ]);
         }
-        return view('polls.index');
+        return redirect('polls');
     }
-
-    /**
-     * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
+    
     public function show($id)
     {
-        //
+        $poll = Poll::where('id', '=', $id)->get();
+        return view('polls.show')->with('poll', $poll[0]);
+        //dd($poll[0]);
     }
-
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
+    
     public function edit($id)
     {
-        //
+
     }
 
     /**

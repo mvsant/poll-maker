@@ -5,7 +5,9 @@
 <div class="p-4 max-w-sm md:max-w-md bg-white rounded-lg border border-gray-200 drop-shadow-md hover:drop-shadow-xl sm:p-6 lg:p-8 dark:bg-gray-800 dark:border-gray-700 my-4">
   <form class="space-y-6" action="#">
     @csrf
-    <h5 class="text-xl font-medium text-gray-900 dark:text-white  break-words whitespace-normal">{{$xData->poll_question}} a aaaaaaaaaaaa aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa lorem ipsum dolor sit amet</h5>
+    <a href="{{url('polls/'.$xData->id)}}">
+      <h5 class="text-xl font-medium text-gray-900 dark:text-white  break-words whitespace-normal">{{$xData->poll_question}} a aaaaaaaaaaaa aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa lorem ipsum dolor sit amet</h5>
+    </a>
     <hr>
 
     <div class="flex flex-col items-center pl-4 rounded border border-gray-200 dark:border-gray-700 hover:border-orange-600">
@@ -22,7 +24,7 @@
 
     <button type="submit" class="w-full text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 rounded-lg px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800 text-xl font-bold">Vote!</button>
     <div class="text-sm font-medium text-gray-500 dark:text-gray-300">
-      Not registered? <a href="{{ route('register') }}" class="text-blue-700 hover:underline dark:text-blue-500">Create account</a>
+      <p>Poll closes at 00:00h</p>
     </div>
   </form>
 </div>
