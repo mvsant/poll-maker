@@ -20,10 +20,17 @@ use Illuminate\Support\Facades\Route;
 }); */
 Route::resource('/', HomeController::class)->name('index','home');
 
-Route::get('/dashboard', function () {
-    return view('dashboard');
-})->middleware(['auth'])->name('dashboard');
+/* Route::get('/polls', function () {
+    return view('polls');
+})->middleware(['auth'])->name('polls'); */
 
-Route::resource('/polls', PollController::class);
+Route::group(['middleware' => 'auth'], function () {
+    Route::resource('polls', PollController::class, ['except' => ['index', 'show']]);
+});
+
+Route::resource('polls', PollController::class, ['only' => ['index', 'show']]);
+
+
+//Route::resource('/polls', PollController::class)->middleware(['auth']);
 
 require __DIR__.'/auth.php';
