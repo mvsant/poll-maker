@@ -28,49 +28,61 @@ class PollController extends Controller
         $poll_alternatives = new Poll_alternatives;
 
         $request->validate([
-            'poll_question' => 'required|max:255',
-            'start_date' => 'required',
-            'end_date' => 'required',
+            'poll_question' => 'required|max:255,min:10',
+            'start_date' => 'required|date',
+            'end_date' => 'required|date',
+            'alternative.*' => 'required|min:1',
         ]);
 
-        $current_poll = $poll::create([
-            'poll_question' => $request->poll_question,
-            'user_id' => auth()->user()->id,
-            'start_date' => $request->start_date,
-            'end_date' => $request->end_date,
-        ]);
+        if (count($request->alternative) < 3) {
+            return back()->with("Please insert at least 3 alternatives");
+        } else {
 
-        foreach ($request->alternative as $item) {
-            $poll_alternatives::create([
-                'alternative' => $item,
-                'poll_id' => $current_poll->id
+            $current_poll = $poll::create([
+                'poll_question' => $request->poll_question,
+                'user_id' => auth()->user()->id,
+                'start_date' => $request->start_date,
+                'end_date' => date_create($request->end_date)->modify('+1 day -1 microsecond'),
             ]);
+
+            foreach ($request->alternative as $item) {
+                $poll_alternatives::create([
+                    'alternative' => $item,
+                    'poll_id' => $current_poll->id
+                ]);
+            }
+            return redirect('polls');
         }
-        return redirect('polls');
     }
-    
+
     public function show($id)
     {
         $poll = Poll::where('id', '=', $id)->get();
         return view('polls.show')->with('poll', $poll[0]);
-        //dd($poll[0]);
     }
-    
+
     public function edit($id)
     {
-
+        $poll = Poll::where('id', '=', $id)->get();
+        $alternatives = Poll_alternatives::where('poll_id', '=', $id)->get();
+        return view('polls.edit')->with(['poll' => $poll[0], 'alternatives' => $alternatives]);
     }
 
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
     public function update(Request $request, $id)
     {
-        //
+        // $poll = Poll::where('id', '=', $id)->get();
+        // $poll_alternatives = Poll_alternatives::where('poll_id', '=', $id)->get();
+
+        $poll = Poll::find($id);
+        $poll->update($request->all());
+
+        foreach ($request->alternative as $item) {
+            Poll_alternatives::where('poll_id', $id)->updateOrCreate([
+                'alternative' => $item,
+                'poll_id' => $id
+            ]);
+        }
+        return redirect('polls')->with('message', 'Company Has Been updated successfully');
     }
 
     /**
