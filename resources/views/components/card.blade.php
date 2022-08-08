@@ -2,29 +2,31 @@
   Iterable with pools table
  -->
 
-<div class="p-4 max-w-sm md:max-w-md bg-white rounded-lg border border-gray-200 drop-shadow-md hover:drop-shadow-xl sm:p-6 lg:p-8 dark:bg-gray-800 dark:border-gray-700 my-4">
+<div class="max-w-sm md:max-w-md lg:w-[35%] bg-gray-100 rounded-lg border border-gray-200 drop-shadow-md hover:drop-shadow-xl sm:p-4 lg:p-6 dark:bg-gray-800 dark:border-gray-700 my-4">
   <form class="space-y-6" action="#">
     @csrf
     <a href="{{url('polls/'.$xData->id)}}">
-      <h5 class="text-xl font-medium text-gray-900 dark:text-white  break-words whitespace-normal">{{$xData->poll_question}} a aaaaaaaaaaaa aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa lorem ipsum dolor sit amet</h5>
+      <h5 class="px-4 py-1 m-2 text-xl font-medium text-gray-900 hover:text-gray-700 dark:text-white dark:hover:text-gray-200 break-words whitespace-normal">{{$xData->poll_question}}</h5>
     </a>
-    <hr>
-
-    <div class="flex flex-col items-center pl-4 rounded border border-gray-200 dark:border-gray-700 hover:border-orange-600">
-      <div class="flex items-center">
-        <input id="bordered-radio-1" type="radio" value="" name="bordered-radio" class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600">
-        <label for="bordered-radio-1" class="py-4 ml-2 w-full text-sm font-medium text-gray-900 dark:text-gray-300 whitespace-normal break-words">Default radio aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa aaaaaaaaaaaaaaaaaaaa lorem ipsum dolor sit amet</label>
+    <hr class="p-4 m-2">
+    @if(Request::is('polls/*'))
+    @foreach($xAlternatives as $item)
+    <div class="rounded border border-gray-200 dark:border-gray-700 hover:border-cyan-600">
+      <div class="">
+        <input id="{{$item->id}}" type="radio" value="" name="bordered-radio" class="peer hidden">
+        <label for="{{$item->id}}" class="block p-4 pl-2 text-sm sm:text-lg font-medium text-gray-900 dark:text-gray-300 whitespace-normal break-words peer-checked:bg-cyan-600 transition duration-150 ease-in-out">{{$item->alternative}}</label>
       </div>
-      <div class="dark:text-gray-100 pb-2">0 Votes</div>
+      <div class="text-gray-100 p-2 bg-gray-900">0 Votes</div>
     </div>
-    <div class="flex items-center pl-4 rounded border border-gray-200 dark:border-gray-700">
-      <input checked="" id="bordered-radio-2" type="radio" value="" name="bordered-radio" class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600">
-      <label for="bordered-radio-2" class="py-4 ml-2 w-full text-sm font-medium text-gray-900 dark:text-gray-300">Checked state</label>
-    </div>
+    @endforeach
 
-    <button type="submit" class="w-full text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 rounded-lg px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800 text-xl font-bold">Vote!</button>
-    <div class="text-sm font-medium text-gray-500 dark:text-gray-300">
-      <p>Poll closes at 00:00h</p>
+    <div class="flex justify-center">
+      <button type="submit" class="w-[60%] text-white text-xl bg-cyan-800 hover:bg-cyan-600 active:bg-cyan-900 focus:border-cyan-900 focus:ring ring-cyan-300 rounded-lg px-5 py-2.5 text-center font-bold transition ease-in-out duration-150 uppercase tracking-widest">Vote!</button>
+
     </div>
+    <div class="text-sm font-medium text-gray-500 dark:text-gray-300">
+      <p class="p-2">Poll closes at 00:00h</p>
+    </div>
+    @endif
   </form>
 </div>

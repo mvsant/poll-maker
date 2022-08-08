@@ -58,7 +58,10 @@ class PollController extends Controller
     public function show($id)
     {
         $poll = Poll::where('id', '=', $id)->get();
-        return view('polls.show')->with('poll', $poll[0]);
+        $alternatives = Poll_alternatives::where('poll_id', '=', $id)->get();
+
+
+        return view('polls.show')->with(['poll' => $poll[0], 'alternatives' => $alternatives]);
     }
 
     public function edit($id)
@@ -82,7 +85,7 @@ class PollController extends Controller
                 'poll_id' => $id
             ]);
         }
-        return redirect('polls')->with('message', 'Company Has Been updated successfully');
+        return redirect('polls.show', $id)->with('message', 'Company Has Been updated successfully');
     }
 
     /**

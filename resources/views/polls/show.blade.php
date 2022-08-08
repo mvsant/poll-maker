@@ -28,7 +28,7 @@
                 </div>
                 @endif
                 <div class="inline-flex flex-wrap gap-3 justify-around w-11/12 mx-auto">
-                    <x-card :x-data="$poll" />
+                    <x-card :x-data="$poll" :x-alternatives="$alternatives"/>
                 </div>
             </div>
         </div>

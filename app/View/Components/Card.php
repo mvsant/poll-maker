@@ -13,10 +13,12 @@ class Card extends Component
      * @return void
      */
     public $xData;
-    public function __construct($xData)
+    public $xAlternatives;
+    public function __construct($xData,$xAlternatives)
     {
         //
         $this->xData = $xData;
+        $this->xAlternatives = $xAlternatives;
     }
 
     /**
