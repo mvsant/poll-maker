@@ -21,7 +21,7 @@
                 <!-- {{$polls}} -->
                 <div class="inline-flex flex-wrap gap-3 justify-around w-11/12 mx-auto">
                     @foreach($polls as $poll)
-                    <x-card :x-data="$poll" />
+                    <x-card :x-data="$poll" :x-alternatives="[]" />
                     @endforeach
                 </div>
             </div>

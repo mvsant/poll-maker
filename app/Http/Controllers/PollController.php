@@ -73,11 +73,13 @@ class PollController extends Controller
 
     public function update(Request $request, $id)
     {
-        // $poll = Poll::where('id', '=', $id)->get();
-        // $poll_alternatives = Poll_alternatives::where('poll_id', '=', $id)->get();
-
         $poll = Poll::find($id);
-        $poll->update($request->all());
+        $poll->update([
+            'poll_question' => $request->poll_question,
+            'user_id' => auth()->user()->id,
+            'start_date' => $request->start_date,
+            'end_date' => date_create($request->end_date)->modify('+1 day -1 microsecond'),
+        ]);
 
         foreach ($request->alternative as $item) {
             Poll_alternatives::where('poll_id', $id)->updateOrCreate([
@@ -85,17 +87,13 @@ class PollController extends Controller
                 'poll_id' => $id
             ]);
         }
-        return redirect('polls.show', $id)->with('message', 'Company Has Been updated successfully');
+        return redirect()->to('polls/' . $id)->with('message', '<p class="text-gray-200">Company Has Been updated successfully</p>');
     }
 
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
     public function destroy($id)
     {
-        //
+        $poll = Poll::where('id', '=', $id)->get();
+        $poll->each->delete();
+        return redirect('polls')->with('message', 'Item deleted !!!');
     }
 }
