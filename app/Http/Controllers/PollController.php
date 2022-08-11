@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Poll;
 use App\Models\Poll_alternatives;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use SebastianBergmann\CodeCoverage\Report\Html\Dashboard;
 
@@ -35,14 +36,15 @@ class PollController extends Controller
         ]);
 
         if (count($request->alternative) < 3) {
-            return back()->with("Please insert at least 3 alternatives");
+            return back()->with('danger', 'Please insert at least 3 alternatives');
         } else {
 
             $current_poll = $poll::create([
                 'poll_question' => $request->poll_question,
                 'user_id' => auth()->user()->id,
                 'start_date' => $request->start_date,
-                'end_date' => date_create($request->end_date)->modify('+1 day -1 microsecond'),
+                'end_date' => Carbon::createFromFormat('Y-m-d', $request->end_date)->endOfDay(),
+
             ]);
 
             foreach ($request->alternative as $item) {
@@ -51,7 +53,7 @@ class PollController extends Controller
                     'poll_id' => $current_poll->id
                 ]);
             }
-            return redirect('polls');
+            return redirect('polls')->with('success', 'Poll created successfully!!!');
         }
     }
 
@@ -78,7 +80,7 @@ class PollController extends Controller
             'poll_question' => $request->poll_question,
             'user_id' => auth()->user()->id,
             'start_date' => $request->start_date,
-            'end_date' => date_create($request->end_date)->modify('+1 day -1 microsecond'),
+            'end_date' => Carbon::createFromFormat('Y-m-d', $request->end_date)->endOfDay(),
         ]);
 
         foreach ($request->alternative as $item) {
@@ -87,13 +89,13 @@ class PollController extends Controller
                 'poll_id' => $id
             ]);
         }
-        return redirect()->to('polls/' . $id)->with('message', '<p class="text-gray-200">Company Has Been updated successfully</p>');
+        return redirect()->to('polls/' . $id)->with('success', 'Poll updated successfully!');
     }
 
     public function destroy($id)
     {
         $poll = Poll::where('id', '=', $id)->get();
         $poll->each->delete();
-        return redirect('polls')->with('message', 'Item deleted !!!');
+        return redirect('polls')->with('danger', 'Item deleted !!!');
     }
 }

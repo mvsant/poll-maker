@@ -1,11 +1,5 @@
 <x-app-layout>
 
-    @if(session()->has('message'))
-    <div class="alert alert-success">
-        {{ session()->get('message') }}
-    </div>
-    @endif
-
     <div class="py-12">
         <div class="max-w-7xl mx-auto sm:px-4 lg:px-6">
             <div class="bg-white dark:bg-gray-800 overflow-hidden shadow-sm sm:rounded-lg dark:text-white">
