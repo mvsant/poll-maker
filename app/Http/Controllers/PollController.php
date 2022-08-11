@@ -35,7 +35,9 @@ class PollController extends Controller
             'alternative.*' => 'required|min:1',
         ]);
 
-        if (count($request->alternative) < 3) {
+        if (date('Y-m-d', strtotime($request->start_date)) > date('Y-m-d', strtotime($request->end_date))) {
+            return back()->with('danger', 'End date must be grater than start date');
+        } elseif (count($request->alternative) < 3) {
             return back()->with('danger', 'Please insert at least 3 alternatives');
         } else {
 
@@ -59,7 +61,7 @@ class PollController extends Controller
 
     public function show($id)
     {
-        $poll = Poll::where('id', '=', $id)->get();
+        $poll = Poll::where('id', $id)->get();
         $alternatives = Poll_alternatives::where('poll_id', '=', $id)->get();
 
 
@@ -79,8 +81,7 @@ class PollController extends Controller
         $poll->update([
             'poll_question' => $request->poll_question,
             'user_id' => auth()->user()->id,
-            'start_date' => $request->start_date,
-            'end_date' => Carbon::createFromFormat('Y-m-d', $request->end_date)->endOfDay(),
+            'end_date' => $request->end_date ? Carbon::createFromFormat('Y-m-d', $request->end_date)->endOfDay() : $poll->end_date,
         ]);
 
         foreach ($request->alternative as $item) {
@@ -97,5 +98,11 @@ class PollController extends Controller
         $poll = Poll::where('id', '=', $id)->get();
         $poll->each->delete();
         return redirect('polls')->with('danger', 'Item deleted !!!');
+    }
+
+    public function vote(Request $request, $id)
+    {
+        Poll_alternatives::where('id', $request->vote)->increment('votes', 1);
+        return redirect()->to('polls/' . $id)->with('success', 'Poll voted successfully!');
     }
 }
