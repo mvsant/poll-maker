@@ -1,3 +1,5 @@
+@vite(['resources/js/voteButtonHandler.js'])
+
 <!-- 
   Iterable with pools table
  -->
@@ -15,13 +17,13 @@
     @foreach($xAlternatives as $item)
     <div class="rounded border border-gray-200 dark:border-gray-700 hover:border-cyan-600">
       <input id="{{$item->id}}" type="radio" value="{{$item->id}}" name="vote" class="peer hidden">
-      <label for="{{$item->id}}" class="block p-4 pl-2 text-sm sm:text-lg font-medium text-gray-900 dark:text-gray-300 whitespace-normal break-words peer-checked:bg-cyan-600 transition duration-150 ease-in-out">{{$item->alternative}}</label>
+      <label for="{{$item->id}}" class="block p-4 pl-2 text-sm sm:text-lg font-medium text-gray-900 dark:text-gray-300 whitespace-normal break-words peer-checked:bg-cyan-600 cursor-pointer transition duration-150 ease-in-out">{{$item->alternative}}</label>
       <div class="text-gray-100 p-2 bg-gray-900">{{$item->votes}} votes</div>
     </div>
     @endforeach
 
     <div class="flex justify-center">
-      <button type="submit" class="w-[60%] text-white text-xl bg-cyan-800 hover:bg-cyan-600 active:bg-cyan-900 focus:border-cyan-900 focus:ring ring-cyan-300 rounded-lg px-5 py-2.5 text-center font-bold transition ease-in-out duration-150 uppercase tracking-widest">Vote!</button>
+      <button type="submit" id="submitButton" class="w-[60%] text-white text-xl bg-cyan-800 disabled:bg-gray-700 hover:bg-cyan-600 disabled:hover:bg-gray-600 active:bg-cyan-900 disabled:active:bg-gray-900 focus:border-cyan-900 disabled:focus:border-gray-900 focus:ring ring-cyan-300 disabled:ring-gray-300 rounded-lg px-5 py-2.5 text-center font-bold transition ease-in-out duration-150 uppercase tracking-widest">Vote!</button>
     </div>
     @endif
     <div class="text-sm font-medium text-gray-500 dark:text-gray-300">
