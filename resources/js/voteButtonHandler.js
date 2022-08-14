@@ -2,7 +2,7 @@ const submitButton = document.querySelector('#submitButton');
 const radios = document.querySelectorAll('input[type=radio]');
 let radiosChecked = document.querySelectorAll('input[type=radio]:checked');
 
-if (!radiosChecked.length) {
+if (!radiosChecked.length && submitButton !== null) {
     submitButton.setAttribute("disabled", "disabled");
 }
 

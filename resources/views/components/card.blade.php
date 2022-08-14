@@ -5,7 +5,7 @@
  -->
 
 <div class="max-w-sm md:max-w-md lg:w-[35%] bg-gray-100 rounded-lg border border-gray-200 drop-shadow-md hover:drop-shadow-xl sm:p-4 lg:p-6 dark:bg-gray-800 dark:border-gray-700 my-4">
-  <form action="{{ route('polls.vote', $xData->id) }}" action="POST" enctype="multipart/form-data" class="space-y-6">
+  <form action="{{ route('polls.vote', $xData->id) }}" method="post" enctype="multipart/form-data" class="space-y-6">
     @csrf
     @method('PUT')
     <a href="{{url('polls/'.$xData->id)}}">

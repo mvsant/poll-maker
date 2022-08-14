@@ -7,9 +7,6 @@ use Illuminate\Support\Facades\Route;
 
 Route::resource('/', HomeController::class)->name('index','home');
 
-Route::get('polls/{poll}/votes',  [PollController::class, 'vote'])->name('polls.vote');
-//Route::post('polls/{poll}/votes',  [PollController::class, 'vote'])->name('polls.vote');
-//Route::post('polls/{poll}',  [PollController::class, 'show'])->name('polls.show');
 
 Route::group(['middleware' => 'auth'], function () {
     Route::resource('polls', PollController::class, ['except' => ['index', 'show']]);
@@ -17,4 +14,5 @@ Route::group(['middleware' => 'auth'], function () {
 
 Route::resource('polls', PollController::class, ['only' => ['index', 'show']]);
 
+Route::post('polls/{poll}',  [PollController::class, 'vote'])->name('polls.vote');
 require __DIR__.'/auth.php';
