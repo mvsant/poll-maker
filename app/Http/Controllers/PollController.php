@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Events\VoteEvent;
 use App\Models\Poll;
 use App\Models\Poll_alternatives;
 use Carbon\Carbon;
@@ -103,6 +104,8 @@ class PollController extends Controller
     public function vote(Request $request, $id)
     {
         Poll_alternatives::where('id', $request->vote)->increment('votes', 1);
+        $get_total = Poll_alternatives::where('id', $request->vote)->get();
+        event(new VoteEvent($request->vote, $get_total));
         return redirect()->to('polls/' . $id)->with('success', 'Poll voted successfully!');
     }
 }

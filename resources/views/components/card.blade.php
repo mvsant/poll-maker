@@ -7,7 +7,7 @@
 <div class="max-w-sm md:max-w-md lg:w-[35%] bg-gray-100 rounded-lg border border-gray-200 drop-shadow-md hover:drop-shadow-xl sm:p-4 lg:p-6 dark:bg-gray-800 dark:border-gray-700 my-4">
   <form action="{{ route('polls.vote', $xData->id) }}" method="post" enctype="multipart/form-data" class="space-y-6">
     @csrf
-    @method('PUT')
+    @method('POST')
     <a href="{{url('polls/'.$xData->id)}}">
       <h5 class="px-4 py-1 m-2 text-xl font-medium text-gray-900 hover:text-gray-700 dark:text-white dark:hover:text-gray-200 break-words whitespace-normal">{{$xData->poll_question}}</h5>
     </a>
@@ -18,7 +18,7 @@
     <div class="rounded border border-gray-200 dark:border-gray-700 hover:border-cyan-600">
       <input id="{{$item->id}}" type="radio" value="{{$item->id}}" name="vote" class="peer hidden">
       <label for="{{$item->id}}" class="block p-4 pl-2 text-sm sm:text-lg font-medium text-gray-900 dark:text-gray-300 whitespace-normal break-words peer-checked:bg-cyan-600 cursor-pointer transition duration-150 ease-in-out">{{$item->alternative}}</label>
-      <div class="text-gray-100 p-2 bg-gray-900">{{$item->votes}} votes</div>
+      <div class="text-gray-100 p-2 bg-gray-900 votes-display">{{$item->votes}} votes</div>
     </div>
     @endforeach
 

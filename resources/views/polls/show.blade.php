@@ -1,3 +1,4 @@
+@vite(['resources/js/voteHandler.js'])
 <x-app-layout>
 
     <div class="py-12">
