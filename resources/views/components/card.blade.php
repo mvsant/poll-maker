@@ -22,12 +22,20 @@
     </div>
     @endforeach
 
+    @if($xData->is_open)
     <div class="flex justify-center">
       <button type="submit" id="submitButton" class="w-[60%] text-white text-xl bg-cyan-800 disabled:bg-gray-700 hover:bg-cyan-600 disabled:hover:bg-gray-600 active:bg-cyan-900 disabled:active:bg-gray-900 focus:border-cyan-900 disabled:focus:border-gray-900 focus:ring ring-cyan-300 disabled:ring-gray-300 rounded-lg px-5 py-2.5 text-center font-bold transition ease-in-out duration-150 uppercase tracking-widest">Vote!</button>
     </div>
     @endif
+
+    @endif
+
     <div class="text-sm font-medium text-gray-500 dark:text-gray-300">
+      @if($xData->is_open)
       <p class="p-2">Poll closes at {{date('d/m/Y - H:i', strtotime($xData->end_date))}}h </p>
+      @else
+      <p class="p-2">Poll closed.</p>
+      @endif
     </div>
   </form>
 </div>

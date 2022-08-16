@@ -40,6 +40,8 @@ class PollController extends Controller
             return back()->with('danger', 'End date must be grater than start date');
         } elseif (count($request->alternative) < 3) {
             return back()->with('danger', 'Please insert at least 3 alternatives');
+        } elseif (Carbon::now()->format('Y-m-d') > $request->end_date) {
+            return back()->with('danger', 'This poll must be end in the future!');
         } else {
 
             $current_poll = $poll::create([
@@ -47,6 +49,7 @@ class PollController extends Controller
                 'user_id' => auth()->user()->id,
                 'start_date' => $request->start_date,
                 'end_date' => Carbon::createFromFormat('Y-m-d', $request->end_date)->endOfDay(),
+                'is_open' => true
 
             ]);
 
@@ -85,13 +88,17 @@ class PollController extends Controller
             'end_date' => $request->end_date ? Carbon::createFromFormat('Y-m-d', $request->end_date)->endOfDay() : $poll->end_date,
         ]);
 
-        foreach ($request->alternative as $item) {
-            Poll_alternatives::where('poll_id', $id)->updateOrCreate([
-                'alternative' => $item,
-                'poll_id' => $id
-            ]);
+        if (Carbon::now()->format('Y-m-d') < $poll->end_date && $poll->is_open == true) {
+            foreach ($request->alternative as $item) {
+                Poll_alternatives::where('poll_id', $id)->updateOrCreate([
+                    'alternative' => $item,
+                    'poll_id' => $id
+                ]);
+            }
+            return redirect()->to('polls/' . $id)->with('success', 'Poll updated successfully!');
+        } else {
+            return redirect()->to('polls/' . $id)->with('danger', 'Poll already closed!');
         }
-        return redirect()->to('polls/' . $id)->with('success', 'Poll updated successfully!');
     }
 
     public function destroy($id)
@@ -103,9 +110,15 @@ class PollController extends Controller
 
     public function vote(Request $request, $id)
     {
+        $poll = Poll::find($id);
+
         Poll_alternatives::where('id', $request->vote)->increment('votes', 1);
         $get_total = Poll_alternatives::where('id', $request->vote)->get();
-        event(new VoteEvent($request->vote, $get_total));
-        return redirect()->to('polls/' . $id)->with('success', 'Poll voted successfully!');
+        if (Carbon::now()->format('Y-m-d') < $poll->end_date && $poll->is_open == true) {
+            event(new VoteEvent($request->vote, $get_total));
+            return redirect()->to('polls/' . $id)->with('success', 'Poll voted successfully!');
+        } else {
+            return redirect()->to('polls/' . $id)->with('danger', 'Poll already closed!');
+        }
     }
 }
