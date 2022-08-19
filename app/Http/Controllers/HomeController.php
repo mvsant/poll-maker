@@ -10,7 +10,7 @@ class HomeController extends Controller
     //
     public function index()
     {
-        $polls = Poll::all();
+        $polls = Poll::simplePaginate(10);
         return view('home')->with('polls',$polls);
     }
 }

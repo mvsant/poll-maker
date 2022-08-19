@@ -15,7 +15,7 @@ class PollController extends Controller
     {
         $poll = new Poll;
         $user = auth()->user();
-        $polls = $poll::where('user_id', $user->id)->get();
+        $polls = $poll::where('user_id', $user->id)->simplePaginate(10);
         return view('polls.index')->with('polls', $polls);
     }
 

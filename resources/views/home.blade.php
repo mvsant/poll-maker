@@ -11,6 +11,7 @@
                     <x-card :x-data="$poll" :x-alternatives="[]" />
                     @endforeach
                 </div>
+                {{ $polls->links() }}
             </div>
         </div>
     </div>
