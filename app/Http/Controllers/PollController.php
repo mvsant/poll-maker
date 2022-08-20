@@ -7,15 +7,14 @@ use App\Models\Poll;
 use App\Models\Poll_alternatives;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
-use SebastianBergmann\CodeCoverage\Report\Html\Dashboard;
+
 
 class PollController extends Controller
 {
     public function index()
     {
-        $poll = new Poll;
         $user = auth()->user();
-        $polls = $poll::where('user_id', $user->id)->simplePaginate(10);
+        $polls = Poll::where('user_id', $user->id)->simplePaginate(10);
         return view('polls.index')->with('polls', $polls);
     }
 
@@ -26,8 +25,7 @@ class PollController extends Controller
 
     public function store(Request $request)
     {
-        $poll = new Poll;
-        $poll_alternatives = new Poll_alternatives;
+        $now = Carbon::now()->format('Y-m-d');
 
         $request->validate([
             'poll_question' => 'required|max:255,min:10',
@@ -36,25 +34,25 @@ class PollController extends Controller
             'alternative.*' => 'required|min:1',
         ]);
 
-        if (date('Y-m-d', strtotime($request->start_date)) > date('Y-m-d', strtotime($request->end_date))) {
+        if ($request->start_date > $request->end_date) {
             return back()->with('danger', 'End date must be grater than start date');
         } elseif (count($request->alternative) < 3) {
             return back()->with('danger', 'Please insert at least 3 alternatives');
-        } elseif (Carbon::now()->format('Y-m-d') > $request->end_date) {
+        } elseif ($now > $request->end_date) {
             return back()->with('danger', 'This poll must be end in the future!');
         } else {
 
-            $current_poll = $poll::create([
+            $current_poll = Poll::create([
                 'poll_question' => $request->poll_question,
                 'user_id' => auth()->user()->id,
                 'start_date' => $request->start_date,
                 'end_date' => Carbon::createFromFormat('Y-m-d', $request->end_date)->endOfDay(),
-                'is_open' => true
+                'is_open' => $request->start_date > $now ? false : true
 
             ]);
 
             foreach ($request->alternative as $item) {
-                $poll_alternatives::create([
+                Poll_alternatives::create([
                     'alternative' => $item,
                     'poll_id' => $current_poll->id
                 ]);
@@ -82,22 +80,36 @@ class PollController extends Controller
     public function update(Request $request, $id)
     {
         $poll = Poll::find($id);
-        $poll->update([
-            'poll_question' => $request->poll_question,
-            'user_id' => auth()->user()->id,
-            'end_date' => $request->end_date ? Carbon::createFromFormat('Y-m-d', $request->end_date)->endOfDay() : $poll->end_date,
-        ]);
+        $now = Carbon::now()->format('Y-m-d');
 
-        if (Carbon::now()->format('Y-m-d') < $poll->end_date && $poll->is_open == true) {
+        $request->validate([
+            'poll_question' => 'required|max:255,min:10',
+            'end_date' => 'required|date',
+            'alternative.*' => 'required|min:1',
+        ]);
+        if ($request->start_date > $request->end_date) {
+            return back()->with('danger', 'End date must be grater than start date');
+        } elseif (count($request->alternative) < 3) {
+            return back()->with('danger', 'Please insert at least 3 alternatives');
+        } elseif ($now > $request->end_date) {
+            return back()->with('danger', 'This poll must be end in the future!');
+        } else {
+
+            $poll->update([
+                'poll_question' => $request->poll_question,
+                'end_date' => Carbon::createFromFormat('Y-m-d', $request->end_date)->endOfDay(),
+
+            ]);
+
+            Poll_alternatives::where('poll_id', $id)->delete();
+
             foreach ($request->alternative as $item) {
-                Poll_alternatives::where('poll_id', $id)->updateOrCreate([
+                Poll_alternatives::create([
                     'alternative' => $item,
                     'poll_id' => $id
                 ]);
             }
-            return redirect()->to('polls/' . $id)->with('success', 'Poll updated successfully!');
-        } else {
-            return redirect()->to('polls/' . $id)->with('danger', 'Poll already closed!');
+            return redirect('polls')->with('success', 'Poll updated successfully!!!');
         }
     }
 

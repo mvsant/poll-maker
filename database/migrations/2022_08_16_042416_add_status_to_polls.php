@@ -14,7 +14,7 @@ return new class extends Migration
     public function up()
     {
         Schema::table('polls', function (Blueprint $table) {
-            $table->binary('is_open')->default(false);
+            $table->binary('is_open');
         });
     }
 

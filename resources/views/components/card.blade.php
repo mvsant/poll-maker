@@ -33,9 +33,11 @@
     <div class="text-sm font-medium text-gray-500 dark:text-gray-300">
       @if($xData->is_open)
       <p class="p-2">Poll closes at {{date('d/m/Y - H:i', strtotime($xData->end_date))}}h </p>
-      @else
-      <p class="p-2">Poll closed.</p>
-      @endif
+      @elseif(date('Y-m-d h:m:i') < $xData->start_date)
+        <p class="p-2">Poll starts at {{date('d/m/Y - H:i', strtotime($xData->start_date))}}h </p>
+        @else
+        <p class="p-2">Poll closed.</p>
+        @endif
     </div>
   </form>
 </div>

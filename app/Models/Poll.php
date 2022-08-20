@@ -11,7 +11,7 @@ class Poll extends Model
 
     protected $table = 'polls';
     protected $primaryKey = 'id';
-    protected $fillable = ['poll_question', 'start_date', 'end_date', 'user_id'];
+    protected $fillable = ['poll_question', 'start_date', 'end_date', 'user_id', 'is_open'];
 
     public function user()
     {
