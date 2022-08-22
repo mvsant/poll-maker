@@ -27,7 +27,7 @@ And others Laravel packages in-the-box.
 Copy and paste commands below to get started:
 
 ```bash
-git clone <my-cool-project>
+git clone git@github.com:mvsant/poll-maker.git
 composer install
 cp .env.example .env
 php artisan key:generate
