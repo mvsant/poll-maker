@@ -22,8 +22,8 @@ class UserSeeder extends Seeder
     {
 
         User::factory(5)->has(
-            Poll::factory(random_int(5, 10))
-                ->has(Poll_alternatives::factory(random_int(2, 3)))
+            Poll::factory(random_int(3, 16))
+                ->has(Poll_alternatives::factory(random(3, 8)))
         )->create();
     }
 }

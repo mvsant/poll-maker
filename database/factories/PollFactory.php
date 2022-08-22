@@ -3,6 +3,7 @@
 namespace Database\Factories;
 
 use App\Models\User;
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
@@ -19,8 +20,8 @@ class PollFactory extends Factory
     {
         return [
             'poll_question' => fake()->text(50),
-            'start_date' => fake()->date('Y-m-d', 'now'),
-            'end_date' => '2022-12-12',
+            'start_date' => Carbon::today()->subDays(rand(0, 365)),
+            'end_date' => Carbon::today()->addDays(rand(0, 365))->endOfDay(),
             'user_id' => User::factory(User::class),
             'is_open' => fake()->boolean()
         ];
