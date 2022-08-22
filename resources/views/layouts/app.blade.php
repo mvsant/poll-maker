@@ -8,18 +8,12 @@
     <script src="https://unpkg.com/flowbite@1.5.2/dist/flowbite.js"></script>
     <script src="https://js.pusher.com/7.2/pusher.min.js"></script>
     <script>
-        // Enable pusher logging - don't include this in production
-        //Pusher.logToConsole = true;
-
-        var pusher = new Pusher('5ea7d5620c78de7536be', {
+        var pusher = new Pusher("{{config('broadcasting.connections.pusher.key')}}", {
             cluster: 'sa1'
         });
 
         var channel = pusher.subscribe('poll-channel');
-        channel.bind('vote-event', function(data) {
-            //alert(JSON.stringify(data));
-            //console.log(JSON.stringify(data));
-        });
+        channel.bind('vote-event', function(data) {});
     </script>
 
     <title>{{ config('app.name', 'Laravel') }}</title>
@@ -41,6 +35,7 @@
             {{ $slot }}
         </main>
     </div>
+    <footer class="my-6 text-center text-lg text-black dark:text-white">Marlon Veiga @ {{date('Y')}}</footer>
 </body>
 
 </html>
