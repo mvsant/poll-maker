@@ -25,7 +25,7 @@ class PollController extends Controller
 
     public function store(Request $request)
     {
-        $now = Carbon::now()->format('Y-m-d');
+        $now = date('Y-m-d h:m:i');
 
         $request->validate([
             'poll_question' => 'required|max:255,min:10',
@@ -80,7 +80,7 @@ class PollController extends Controller
     public function update(Request $request, $id)
     {
         $poll = Poll::find($id);
-        $now = Carbon::now()->format('Y-m-d');
+        $now =  date('Y-m-d h:m:i');
 
         $request->validate([
             'poll_question' => 'required|max:255,min:10',
@@ -126,7 +126,7 @@ class PollController extends Controller
 
         Poll_alternatives::where('id', $request->vote)->increment('votes', 1);
         $get_total = Poll_alternatives::where('id', $request->vote)->get();
-        if (Carbon::now()->format('Y-m-d') < $poll->end_date && $poll->is_open == true) {
+        if (date('Y-m-d h:m:i') < $poll->end_date) {
             event(new VoteEvent($request->vote, $get_total));
             return redirect()->to('polls/' . $id)->with('success', 'Poll voted successfully!');
         } else {
